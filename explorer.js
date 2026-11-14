@@ -12,6 +12,7 @@ const S={en:{
  decl:'declining',incr:'rising',axis:'cm of water, seasonal cycle removed',hint:'Move over the chart to read values. Thick lines are the Sen trend.',
  maptitle:'Map: click an area',maplegend:'Colour = GRACE total water storage trend (cm/yr): red declining, blue rising. Rectangles are analysis boxes, not exact borders.',
  mapfail:'The map could not load. The dropdowns still work.',credit:'Map UX inspired by geemap / leafmap (Qiusheng Wu, MIT). Map data: OpenStreetMap contributors.',
+ pper:'GRACE record, April 2002 to September 2026',
  periodtxt:(a,b,n,g)=>`GRACE trend: ${a} to ${b}. The chart and the GLDAS-based values use the ${g} months both datasets share (April 2002 to July 2026).`,
  method:'Method: the seasonal cycle is removed (calendar-month climatology), then a Mann-Kendall test and Sen slope are applied. The chart plots these deseasonalized anomalies of the regional monthly means. p-values are autocorrelation-corrected (Hamed-Rao). Confidence intervals, where shown, are classic Sen/Kendall intervals and are not autocorrelation-adjusted.',
  mdata:'<bdi dir="ltr">JPL GRACE/GRACE-FO Mascon CRI RL06.3 v04</bdi>, <bdi dir="ltr">GLDAS Noah L4 monthly 0.25 deg V2.1</bdi> (NASA GES DISC, DOI <bdi dir="ltr">10.5067/SXAVCZFAQLNO</bdi>)',mlab:'Data: ',
@@ -32,6 +33,7 @@ const S={en:{
  decl:'انخفاض',incr:'ارتفاع',axis:'سم من الماء بعد إزالة الموسمية',hint:'حرّك المؤشر فوق الرسم لقراءة القيم. الخطوط السميكة هي اتجاه سين.',
  maptitle:'الخريطة: اضغط على منطقة',maplegend:'اللون = اتجاه إجمالي المياه المخزنة من GRACE (سم/سنة): أحمر انخفاض، أزرق ارتفاع. المستطيلات هي نطاقات التحليل وليست الحدود الدقيقة.',
  mapfail:'تعذّر تحميل الخريطة. القوائم المنسدلة تعمل.',credit:'واجهة الخريطة مستوحاة من geemap / leafmap (Qiusheng Wu, MIT). بيانات الخريطة: مساهمو OpenStreetMap.',
+ pper:'سجل GRACE، أبريل 2002 إلى سبتمبر 2026',
  periodtxt:(a,b,n,g)=>`اتجاه GRACE: من ${a} إلى ${b}. الرسم والقيم المبنية على GLDAS تستخدم الأشهر المشتركة بين المجموعتين (${g} شهرًا، من أبريل 2002 إلى يوليو 2026).`,
  method:'المنهج: تُزال الدورة الموسمية (متوسط كل شهر تقويمي)، ثم يُطبَّق اختبار مان-كندال وميل سين. يعرض الرسم هذه الانحرافات منزوعة الموسمية من المتوسطات الشهرية للمنطقة. قيم p مصحّحة للارتباط الذاتي (هامد-راو). فواصل الثقة، حيث تظهر، هي فواصل سين/كندال التقليدية وغير معدّلة للارتباط الذاتي.',
  mdata:'<bdi dir="ltr">JPL GRACE/GRACE-FO Mascon CRI RL06.3 v04</bdi> و<bdi dir="ltr">GLDAS Noah L4 monthly 0.25 deg V2.1</bdi> <bdi dir="ltr">(NASA GES DISC, DOI 10.5067/SXAVCZFAQLNO)</bdi>',mlab:' البيانات: ',
@@ -81,12 +83,12 @@ function drawMap(fit){
  const cs=D.countries.map((c,i)=>({c,i})).sort((a,b)=>area(b.c.whole)-area(a.c.whole));
  const lbl=(r,sv,extra)=>nm(r,LANG)+': '+(ar?'<span class="num">'+(sv<0?'\u25BC ':'\u25B2 ')+Math.abs(sv).toFixed(2)+'</span> '+T.cmyr:fmt(sv,2)+' '+T.cmyr)+(r.approx?' ('+T.approx+')':'');
  cs.forEach(({c,i})=>{const w=c.whole,sv=w.stats.tws.sen,on=i===st.c;
-  const rc=L.rectangle(w.bounds,{color:on?'#0c2a2f':'#585254',weight:on?3:1,fillColor:sc(sv),fillOpacity:on?.25:.6,dashArray:w.approx?'4 3':null}).addTo(LG);
+  const rc=L.rectangle(w.bounds,{color:on?'#0c2a2f':'#585254',weight:on?3:.6,opacity:on?1:.45,fillColor:sc(sv),fillOpacity:on?(st.r==='whole'?.55:.18):.15,dashArray:w.approx?'4 3':null}).addTo(LG);
   rc.bindTooltip(lbl(w,sv),{sticky:true});rc.on('click',()=>{st.c=i;st.r='whole';update()})});
  C.regions.forEach(r=>{if(!r.bounds&&!r.box)return;
   let b=r.bounds;if(!b&&r.zone){const B={saq:[[27,37],[32,42.5]],sirhan:[[29,41],[32,44]],ahsa:[[22,48],[26,51]]};b=B[r.id]}if(!b)return;
   const sv=r.stats.tws.sen,on=r.id===st.r;
-  const rc=L.rectangle(b,{color:on?'#0c2a2f':'#444',weight:on?3:1,fillColor:sc(sv),fillOpacity:.65,dashArray:(r.approx||r.zone)?'4 3':null}).addTo(LG);
+  const rc=L.rectangle(b,{color:on?'#0c2a2f':'#444',weight:on?3:1,fillColor:sc(sv),fillOpacity:on?.8:.45,dashArray:(r.approx||r.zone)?'4 3':null}).addTo(LG);
   rc.bindTooltip(lbl(r,sv),{sticky:true});rc.on('click',()=>{st.r=r.id;update()})});
  if(fit){const ab=D.countries.map(c=>c.whole.bounds);MAP.fitBounds([[Math.min(...ab.map(b=>b[0][0])),Math.min(...ab.map(b=>b[0][1]))],[Math.max(...ab.map(b=>b[1][0])),Math.max(...ab.map(b=>b[1][1]))]],{padding:[10,10]})}
 }
@@ -106,7 +108,7 @@ function update(){
   h+=`<p class="cap">${esc(T.zonenote)}</p><figure><img src="${(window.IM||{})[o.image]||''}" alt="${esc(nm(o,lang))}"></figure>`;
  }
  h+=`<div class="cards">`+keys.map(k=>{const s=o.stats[k];if(!s)return'';const dir=s.sen<0?T.decl:T.incr;
-  let line2='';if(k==='tws'&&s.p!=null&&!s.ci){line2=`<br>${esc(T.pcorr)}: <span class="num">${fp(s.p)}</span><br>${esc(s.p>0.05?T.nsig:T.sig)}`}
+  let line2='';if(k==='tws'&&s.p!=null&&!s.ci){line2=`<br>${esc(T.pcorr)}: <span class="num">${fp(s.p)}</span><br>${esc(s.p>0.05?T.nsig:T.sig)}<br>(${esc(T.pper)})`}
   else if(s.ci){line2=`<br>95% CI: ${ar?'<span class="num">['+s.ci[0]+' , '+s.ci[1]+']</span>':f(s.ci[0]+' to '+s.ci[1])}<br>${esc(T.pcorr)}: <span class="num">${s.p}</span><br>${esc(ar?'الفاصل غير معدّل للارتباط الذاتي':'CI not autocorrelation-adjusted')}`}
   return `<div class="card" style="--c:${COL[k]}"><div class="cn">${esc(T[k])}</div><div class="cv">${arrow(s.sen,ar,T,2)}</div><div class="cd">${esc(dir)}${line2}</div></div>`}).join('')+`</div>`;
  const gr=D.period_grace.replace(' to ',ar?' إلى ':' to ');
