@@ -1,16 +1,16 @@
 (function(){
 const S={en:{
  title:'Explore the data',lead:'Pick a country and an area, or click the map, to see how its stored water changed from 2002 on.',
- country:'Country',area:'Area',whole:'Whole country (box)',show:'Show',
+ country:'Country',area:'Area',whole:'Whole country (box)',wholeM:'Whole country (country mask)',show:'Show',
  tws:'GRACE total water storage',sm:'GLDAS soil moisture (0-2 m)',gw:'Groundwater proxy (derived)',
  cmyr:'cm/yr',period:'Period',months:'months',pcorr:'autocorrelation-corrected p',
- res:'GRACE sees areas of roughly 300 km and larger. A value for a city or small area describes the surrounding GRACE cell or box, not the place itself. Country and region boxes are rectangles, not exact borders, and include some neighbouring territory.',
+ res:'GRACE sees areas of roughly 300 km and larger. A value for a city or small area describes the surrounding GRACE cell or box, not the place itself. Region boxes are rectangles, not exact borders. Saudi Arabia is a country mask; other countries are boxes and include some neighbouring territory.',
  derived:'The groundwater proxy is GRACE minus modelled GLDAS soil moisture: derived, not measured.',
  approx:'Approximate: small area',approxnote:'This area is smaller than or close to GRACE resolution and shares signal with its neighbours. Treat the numbers as indicative only.',
  nsig:'not statistically significant (p above 0.05)',sig:'statistically significant',
  zonenote:'Aquifer zone: total water storage only. Monthly series and the GLDAS split are not loaded for it; the chart image comes from the analysis notebook.',
  decl:'declining',incr:'rising',axis:'cm of water, seasonal cycle removed',hint:'Move over the chart to read values. Thick lines are the Sen trend.',
- maptitle:'Map: click an area',maplegend:'Colour = GRACE total water storage trend (cm/yr): red declining, blue rising. Rectangles are analysis boxes, not exact borders.',
+ maptitle:'Map: click an area',maplegend:'Colour = GRACE total water storage trend (cm/yr): red declining, blue rising. Rectangles are analysis boxes (the Saudi rectangle is the bounding box of its country mask), not exact borders.',
  mapfail:'The map could not load. The dropdowns still work.',credit:'Map UX inspired by geemap / leafmap (Qiusheng Wu, MIT). Map data: OpenStreetMap contributors.',
  pper:'GRACE record, April 2002 to September 2026',
  periodtxt:(a,b,n,g)=>`GRACE trend: ${a} to ${b}. The chart and the GLDAS-based values use the ${g} months both datasets share (April 2002 to July 2026).`,
@@ -22,16 +22,16 @@ const S={en:{
  risingnote:'GRACE total water storage covers all stored water, not groundwater alone.'},
  ar:{
  title:'استكشف البيانات',lead:'اختر دولة ومنطقة، أو اضغط على الخريطة، لترى كيف تغيّر مخزونها من المياه منذ 2002.',
- country:'الدولة',area:'المنطقة',whole:'الدولة كاملة (نطاق)',show:'اعرض',
+ country:'الدولة',area:'المنطقة',whole:'الدولة كاملة (نطاق)',wholeM:'الدولة كاملة (حدود الدولة)',show:'اعرض',
  tws:'إجمالي المياه المخزنة (GRACE)',sm:'رطوبة التربة (GLDAS، 0-2 م)',gw:'مؤشر المياه الجوفية (مشتق)',
  cmyr:'سم/سنة',period:'الفترة',months:'شهرًا',pcorr:'قيمة p بعد تصحيح الارتباط الذاتي',
- res:'يرى GRACE مساحات تقارب 300 كم فأكثر. القيمة لمدينة أو منطقة صغيرة تصف خلية GRACE أو النطاق المحيط بها، وليس المكان نفسه. نطاقات الدول والمناطق مستطيلات وليست حدودًا دقيقة، وتضم بعض أراضي الجوار.',
+ res:'يرى GRACE مساحات تقارب 300 كم فأكثر. القيمة لمدينة أو منطقة صغيرة تصف خلية GRACE أو النطاق المحيط بها، وليس المكان نفسه. نطاقات المناطق مستطيلات وليست حدودًا دقيقة. السعودية مقنَّعة بحدود الدولة، أما بقية الدول فنطاقات وتضم بعض أراضي الجوار.',
  derived:'مؤشر المياه الجوفية هو GRACE ناقص رطوبة تربة GLDAS المحاكاة: مشتق وليس مقيسًا.',
  approx:'تقريبي: منطقة صغيرة',approxnote:'هذه المنطقة أصغر من دقة GRACE أو قريبة منها وتتشارك الإشارة مع جيرانها. اعتبر الأرقام إرشادية فقط.',
  nsig:'غير دالّ إحصائيًا (p أكبر من 0.05)',sig:'دالّ إحصائيًا',
  zonenote:'خزان جوفي: إجمالي المياه المخزنة فقط. السلسلة الشهرية وفصل GLDAS غير محمّلين له، والصورة من دفتر التحليل.',
  decl:'انخفاض',incr:'ارتفاع',axis:'سم من الماء بعد إزالة الموسمية',hint:'حرّك المؤشر فوق الرسم لقراءة القيم. الخطوط السميكة هي اتجاه سين.',
- maptitle:'الخريطة: اضغط على منطقة',maplegend:'اللون = اتجاه إجمالي المياه المخزنة من GRACE (سم/سنة): أحمر انخفاض، أزرق ارتفاع. المستطيلات هي نطاقات التحليل وليست الحدود الدقيقة.',
+ maptitle:'الخريطة: اضغط على منطقة',maplegend:'اللون = اتجاه إجمالي المياه المخزنة من GRACE (سم/سنة): أحمر انخفاض، أزرق ارتفاع. المستطيلات هي نطاقات التحليل (مستطيل السعودية هو الإطار المحيط بقناع حدودها) وليست الحدود الدقيقة.',
  mapfail:'تعذّر تحميل الخريطة. القوائم المنسدلة تعمل.',credit:'واجهة الخريطة مستوحاة من geemap / leafmap (Qiusheng Wu, MIT). بيانات الخريطة: مساهمو OpenStreetMap.',
  pper:'سجل GRACE، أبريل 2002 إلى سبتمبر 2026',
  periodtxt:(a,b,n,g)=>`اتجاه GRACE: من ${a} إلى ${b}. الرسم والقيم المبنية على GLDAS تستخدم الأشهر المشتركة بين المجموعتين (${g} شهرًا، من أبريل 2002 إلى يوليو 2026).`,
@@ -203,20 +203,20 @@ function update(){
  const lang=LANG,T=S[lang],ar=lang==='ar',{D,C,o}=cur();
  const xc=document.getElementById('xc'),xr=document.getElementById('xr');if(!xc)return;
  xc.value=st.c;
- xr.innerHTML=`<option value="whole">${esc(T.whole)}</option>`+C.regions.map(r=>`<option value="${r.id}">${esc(nm(r,lang))}${r.zone?'':r.approx?(ar?' (تقريبي)':' (approx.)'):''}</option>`).join('');
+ xr.innerHTML=`<option value="whole">${esc(C.whole.name.en==='Saudi Arabia'?T.wholeM:T.whole)}</option>`+C.regions.map(r=>`<option value="${r.id}">${esc(nm(r,lang))}${r.zone?'':r.approx?(ar?' (تقريبي)':' (approx.)'):''}</option>`).join('');
  xr.value=st.r;xr.disabled=!C.regions.length;
  const CX=window.CTX||{layers:{}},lids=Object.keys(CX.layers);
  const ckey=oo=>Object.keys(CX.areas||{}).find(k=>CX.areas[k].country===C.whole.name.en&&(CX.areas[k].region==='whole'?oo===C.whole:oo.id===CX.areas[k].region));
  const ck=ckey(o);
  let tabs=`<div class="ltabs" role="tablist" aria-label="${esc(T.lyr)}">`+['storage'].concat(lids).map(id=>`<button type="button" role="tab" class="ltab" data-l="${id}" aria-selected="${st.l===id}">${esc(T['l_'+id])}</button>`).join('')+`</div>`;
  if(st.l!=='storage'&&!CX.layers[st.l])st.l='storage';
- const sub=lids.length&&C.whole.name.en==='Saudi Arabia'?`<div class="chips" role="group" aria-label="${esc(T.subbox)}" style="margin:0 0 14px"><span class="cap" style="margin:0 8px 0 0;align-self:center">${esc(T.subbox)}:</span>`+Object.keys(CX.areas).map(k=>{const a=CX.areas[k],on=k===ck;return `<button type="button" class="chip sbx" data-k="${k}" aria-pressed="${on}" style="${on?'border-color:var(--teal);background:#eaf4f3':''}">${esc(k==='Saudi'?(ar?'السعودية (نطاق)':'Saudi Arabia (box)'):k==='Saq-Disi'?(ar?'الساق / الديسي':'Saq-Disi'):k==='Qassim'?(ar?'القصيم':'Qassim'):(ar?'حائل':'Hail'))}</button>`}).join('')+`</div>`:'';
+ const sub=lids.length&&C.whole.name.en==='Saudi Arabia'?`<div class="chips" role="group" aria-label="${esc(T.subbox)}" style="margin:0 0 14px"><span class="cap" style="margin:0 8px 0 0;align-self:center">${esc(T.subbox)}:</span>`+Object.keys(CX.areas).map(k=>{const a=CX.areas[k],on=k===ck;return `<button type="button" class="chip sbx" data-k="${k}" aria-pressed="${on}" style="${on?'border-color:var(--teal);background:#eaf4f3':''}">${esc(k==='Saudi'?(ar?'السعودية':'Saudi Arabia'):k==='Saq-Disi'?(ar?'الساق / الديسي':'Saq-Disi'):k==='Qassim'?(ar?'القصيم':'Qassim'):(ar?'حائل':'Hail'))}</button>`}).join('')+`</div>`:'';
  document.getElementById('xbadge').innerHTML=tabs+(st.l!=='storage'?sub:'')+(o.approx?`<p class="approx" role="note"><b>${esc(T.approx)}.</b> ${esc(T.approxnote)}</p>`:'');
  document.querySelectorAll('#xbadge .ltab').forEach(b=>b.onclick=()=>{st.l=b.dataset.l;update()});
  document.querySelectorAll('#xbadge .sbx').forEach(b=>b.onclick=()=>{const a=CX.areas[b.dataset.k];st.r=a.region;update()});
  if(st.l!=='storage'){
   const LM=CX.layers[st.l],CC=CL[st.l],D0=LM.data[ck];
-  if(!D0){document.getElementById('xbody').innerHTML=`<p class="cap">${esc(T.nodata)}</p><div class="chips">`+Object.keys(CX.areas).map(k=>`<button type="button" class="chip" data-k="${k}">${esc(k==='Saudi'?(ar?'السعودية (نطاق)':'Saudi Arabia (box)'):k)}</button>`).join('')+`</div>`;
+  if(!D0){document.getElementById('xbody').innerHTML=`<p class="cap">${esc(T.nodata)}</p><div class="chips">`+Object.keys(CX.areas).map(k=>`<button type="button" class="chip" data-k="${k}">${esc(k==='Saudi'?(ar?'السعودية':'Saudi Arabia'):k)}</button>`).join('')+`</div>`;
    document.querySelectorAll('#xbody .chip').forEach(b=>b.onclick=()=>{const a=CX.areas[b.dataset.k];st.c=D.countries.findIndex(c=>c.whole.name.en===a.country);st.r=a.region;update()});drawMap(false);return}
   const sx=D0.stats,sg=sx.p<=0.05,up=sx.sen>0,nmA=nm(o,lang),dec=CC.dec;
   const hv=ar?(up?'':'\u25BC ')+Math.abs(sx.sen).toFixed(dec):fmt(sx.sen,dec),hp=sx.p<0.001?'<0.001':sx.p.toFixed(2);
@@ -252,7 +252,7 @@ function update(){
   else if(s.ci){line2=`<br>95% CI: ${ar?'<span class="num">['+s.ci[0]+' , '+s.ci[1]+']</span>':f(s.ci[0]+' to '+s.ci[1])}<br>${esc(T.pcorr)}: <span class="num">${s.p}</span><br>${esc(ar?'الفاصل غير معدّل للارتباط الذاتي':'CI not autocorrelation-adjusted')}`}
   return `<div class="card" style="--c:${COL[k]}"><div class="cn">${esc(T[k])}</div><div class="cv">${arrow(s.sen,ar,T,2)}</div><div class="cd">${esc(dir)}${line2}</div></div>`}).join('')+`</div>`;
  const gr=D.period_grace.replace(' to ',ar?' إلى ':' to ');
- if(o.series){const a=D.months[0],b=D.months[D.months.length-1];h+=`<p class="cap">${T.periodtxt(f(D.period_grace.split(' ')[0]),f(D.period_grace.split(' ')[2]),f(String(261)),f(String(D.months.length)))}</p>`}
+ if(o.series){const a=D.months[0],b=D.months[D.months.length-1];h+=`<p class="cap">${T.periodtxt(f(D.period_grace.split(' ')[0]),f(D.period_grace.split(' ')[2]),f(String(259)),f(String(D.months.length)))}</p>`}
  else h+=`<p class="cap">${esc(T.period)}: ${f(o.period.replace(' to ',ar?' إلى ':' to '))} (${f(String(o.n))} ${esc(T.months)}). ${o.box?f(o.box):''}</p>`;
  if(o.series)h+=`<div class="warn"><p style="margin:0">${esc(T.derived)}</p></div>`;
  h+=`<div class="warn" style="margin-top:10px"><p style="margin:0">${esc(T.res)}</p></div><p class="cap" style="margin-top:12px">${f(T.method)}${esc(T.mlab)}${T.mdata}.</p>`;
