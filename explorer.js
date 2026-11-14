@@ -42,6 +42,18 @@ const S={en:{
  rising:(l)=>`${l} تُظهر ارتفاعًا في إجمالي المياه المخزنة، لا انخفاضًا. يعرض الترتيب الاتجاه كما قيس.`,
  risingnote:'إجمالي المياه المخزنة في GRACE يشمل كل المياه المخزنة، وليس المياه الجوفية وحدها.'}};
 Object.assign(S.en,{
+ l_crop:'Cropland (MODIS MCD12Q1)',crop_u:'% of land per year',cropax:'Cropland cover, % of land (yearly)',
+ ctxnote_crop:'Context layer: correlation, not proof. Cropland here is the share of land pixels classed as cropland or cropland/natural mosaic (IGBP classes 12 and 14) in the MODIS 500 m yearly land cover product. At 500 m, land cover is coarse in an arid mosaic of small fields, and the percentages are small (about 0.1 to 2.3 %), so read the direction of change, not the exact level. Changes in cropland cover are consistent with changes in irrigated farming, but this was not tested. Sub-boxes are approximate.',
+ h_cr_up:(a,v,p)=>`Cropland cover in ${a} rose slightly: ${v} % of land per year (p = ${p}).`,
+ h_cr_dn:(a,v,p)=>`Cropland cover in ${a} fell slightly: ${v} % of land per year (p = ${p}).`,
+ h_cr_fl:(a,v,p)=>`No significant overall trend in cropland cover in ${a}: ${v} % of land per year (p = ${p}).`,
+ h_cr_x:(f0,y0,f1,y1,mx,my,mn,ny)=>`${f0} % in ${y0} and ${f1} % in ${y1}. Highest ${mx} % in ${my}, lowest ${mn} % in ${ny}.`,
+ l_smap:'Soil moisture (SMAP)',sm_u:'m\u00B3/m\u00B3 per year',smp:'samples',smax:'Soil moisture anomaly, m\u00B3/m\u00B3 (monthly sample, seasonal cycle removed)',
+ ctxnote_sm:'Context layer: correlation, not proof. SMAP measures soil moisture in roughly the top 5 cm. Each month is one sample: the 15th-day morning overpass, 136 possible samples from April 2015. Retrievals are missing for many months (shown as gaps; the sample count is in the card), and the sub-boxes are approximate. SMAP cells are 36 km wide, which is coarse for small areas.',
+ h_sm_up:(a,v,p)=>`Surface soil moisture in ${a} is rising: ${v} m\u00B3/m\u00B3 per year (p = ${p}).`,
+ h_sm_dn:(a,v,p)=>`Surface soil moisture in ${a} is falling: ${v} m\u00B3/m\u00B3 per year (p = ${p}).`,
+ h_sm_fl:(a,v,p)=>`No significant trend in surface soil moisture in ${a}: ${v} m\u00B3/m\u00B3 per year (p = ${p}), April 2015 to October 2026.`,
+ h_sm_x:'SMAP senses only the top few centimetres of soil, while groundwater depletion is deep, so it would not show up here. This is an interpretation, not proof.',
  l_et:'ET (MOD16)',et_u:'mm/yr per year',yrs:'years',pk1:'p (Mann-Kendall, yearly series)',etax:'Annual evapotranspiration (mm per year)',
  ctxnote_et:'Context layer: it is correlation, not proof of pumping. Evapotranspiration (ET) is the water that returns to the air from soil and plants. This is a yearly series for 2002 to 2025 (not deseasonalized). MOD16 is known to overestimate ET over bare desert, so read the level with care. The sub-boxes are approximate.',
  h_et_up:(a,v,p)=>`ET in ${a} is rising: ${v} mm/yr each year (p = ${p}).`,
@@ -69,6 +81,18 @@ Object.assign(S.en,{
  h_st:(a,d,v,sg)=>`Total water storage in ${a} is ${d} by about ${v} cm per year (${sg}).`,
  ndvi_u:'NDVI per year',rain_u:'mm/month per year'});
 Object.assign(S.ar,{
+ l_crop:'الأراضي الزراعية (MODIS MCD12Q1)',crop_u:'% من اليابسة في السنة',cropax:'الغطاء الزراعي، % من اليابسة (سنوي)',
+ ctxnote_crop:'طبقة سياقية: ارتباط وليست دليلًا. الأراضي الزراعية هنا هي نسبة بكسلات اليابسة المصنفة أرضًا زراعية أو فسيفساء زراعية/طبيعية (فئتا IGBP 12 و14) في منتج غطاء الأرض السنوي من MODIS بدقة 500 م. هذه الدقة خشنة في فسيفساء صحراوية من حقول صغيرة، والنسب صغيرة (نحو 0.1 إلى 2.3 %)، فاقرأ اتجاه التغيّر لا مستواه الدقيق. تغيّر الغطاء الزراعي ينسجم مع تغيّر الزراعة المروية، لكن هذا لم يُختبر. النطاقات الفرعية تقريبية.',
+ h_cr_up:(a,v,p)=>`الغطاء الزراعي في ${a} ارتفع قليلًا: ${v} % من اليابسة في السنة (p = ${p}).`,
+ h_cr_dn:(a,v,p)=>`الغطاء الزراعي في ${a} انخفض قليلًا: ${v} % من اليابسة في السنة (p = ${p}).`,
+ h_cr_fl:(a,v,p)=>`لا اتجاه عامًا دالًّا في الغطاء الزراعي في ${a}: ${v} % من اليابسة في السنة (p = ${p}).`,
+ h_cr_x:(f0,y0,f1,y1,mx,my,mn,ny)=>`${f0} % في ${y0} و${f1} % في ${y1}\u200F. الأعلى ${mx} % في ${my}، والأدنى ${mn} % في ${ny}\u200F.`,
+ l_smap:'رطوبة التربة (\u2066SMAP\u2069)',sm_u:'م\u00B3/م\u00B3 في السنة',smp:'عينة',smax:'انحراف رطوبة التربة، م\u00B3/م\u00B3 (عينة شهرية، بعد إزالة الدورة الموسمية)',
+ ctxnote_sm:'طبقة سياقية: ارتباط وليست دليلًا. يقيس \u2066SMAP\u2069 رطوبة التربة في نحو أعلى 5 سم. كل شهر عينة واحدة: مرور صباح اليوم الخامس عشر، بحد أقصى 136 عينة منذ أبريل 2015. القراءات مفقودة في أشهر كثيرة (تظهر فجوات، وعدد العينات في البطاقة)، والنطاقات الفرعية تقريبية. خلايا \u2066SMAP\u2069 عرضها 36 كم، وهي خشنة للمناطق الصغيرة.',
+ h_sm_up:(a,v,p)=>`رطوبة التربة السطحية في ${a} ترتفع: ${v} م\u00B3/م\u00B3 في السنة (p = ${p}).`,
+ h_sm_dn:(a,v,p)=>`رطوبة التربة السطحية في ${a} تتراجع: ${v} م\u00B3/م\u00B3 في السنة (p = ${p}).`,
+ h_sm_fl:(a,v,p)=>`لا اتجاه دالًّا في رطوبة التربة السطحية في ${a}: ${v} م\u00B3/م\u00B3 في السنة (p = ${p})، من أبريل 2015 إلى أكتوبر 2026\u200F.`,
+ h_sm_x:'يستشعر \u2066SMAP\u2069 بضعة سنتيمترات من سطح التربة فقط، أما استنزاف المياه الجوفية فعميق، فلا يظهر هنا. هذا تفسير وليس دليلًا.',
  l_et:'التبخر-نتح (\u2066MOD16\u2069)',et_u:'ملم/سنة في السنة',yrs:'سنة',pk1:'قيمة p (مان-كندال، سلسلة سنوية)',etax:'التبخر-نتح السنوي (ملم في السنة)',
  ctxnote_et:'طبقة سياقية: هي ارتباط وليست دليلًا على الضخ. التبخر-نتح (ET) هو الماء الذي يعود إلى الجو من التربة والنبات. هذه سلسلة سنوية من 2002 إلى 2025 (دون إزالة الموسمية). من المعروف أن \u2066MOD16\u2069 يبالغ في تقدير ET فوق الصحراء العارية، فاقرأ المستوى بحذر. النطاقات الفرعية تقريبية.',
  h_et_up:(a,v,p)=>`التبخر-نتح في ${a} يرتفع: ${v} ملم/سنة كل سنة (p = ${p}).`,
@@ -95,7 +119,7 @@ Object.assign(S.ar,{
  h_gr_y:'الاخضرار سياق فقط ولا يبيّن مصدر المياه.',
  h_st:(a,d,v,sg)=>`إجمالي المياه المخزنة في ${a} ${d} بنحو ${v} سم كل سنة (${sg}).`,
  ndvi_u:'NDVI في السنة',rain_u:'ملم/شهر في السنة'});
-const CL={et:{col:'#b9770e',dec:2,k:'et'},imerg:{col:'#1b7fb5',dec:3,k:'rain'},ndvi:{col:'#4c9a2a',dec:4,k:'gr'}};
+const CL={crop:{col:'#7d6608',dec:4,k:'crop'},smap:{col:'#8e44ad',dec:5,k:'sm'},et:{col:'#b9770e',dec:2,k:'et'},imerg:{col:'#1b7fb5',dec:3,k:'rain'},ndvi:{col:'#4c9a2a',dec:4,k:'gr'}};
 const COL={tws:'#1f4e79',sm:'#2aa764',gw:'#c0392b'};
 const NUM=/(\d[\d.,]*-\d[\d.,]*|[-+]?\d[\d.,]*(?:e-?\d+)?)/g;
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -159,7 +183,7 @@ function chart(box,c){
  for(let v=Math.ceil(lo/tk)*tk;v<=hi;v+=tk){s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="${Math.abs(v)<1e-9?'#999':'#eae9ea'}"/><text x="${m.l-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="#585254">${(+v.toFixed(5))}</text>`}
  const y0=+mo[0].slice(0,4),y1=+mo[n-1].slice(0,4);
  for(let yr=Math.ceil(y0/4)*4;yr<=y1;yr+=4){const xx=m.l+(W-m.l-m.r)*(yr+.5/12-t0)/(t1-t0);s+=`<text x="${xx}" y="${H-10}" text-anchor="middle" font-size="11" fill="#585254">${yr}</text>`}
- act.forEach(k=>{const v=c.ser[k];s+=`<polyline fill="none" stroke="${c.cols[k]}" stroke-opacity=".45" stroke-width="1.4" points="${v.map((a,i)=>x(i)+','+y(a)).join(' ')}"/>`;
+ act.forEach(k=>{const v=c.ser[k];if(c.dots)v.forEach((a,i)=>{s+=`<circle cx="${x(i)}" cy="${y(a)}" r="2.6" fill="${c.cols[k]}" fill-opacity=".6"/>`});else s+=`<polyline fill="none" stroke="${c.cols[k]}" stroke-opacity=".45" stroke-width="1.4" points="${v.map((a,i)=>x(i)+','+y(a)).join(' ')}"/>`;
   const sl=c.sl[k],ic=median(v.map((a,i)=>a-sl*(tt[i]-t0)));
   s+=`<line x1="${x(0)}" x2="${x(n-1)}" y1="${y(ic)}" y2="${y(ic+sl*(t1-t0))}" stroke="${c.cols[k]}" stroke-width="3"/>`});
  s+=`<line id="xcur" y1="${m.t}" y2="${H-m.b}" stroke="#251f21" stroke-opacity=".5" visibility="hidden"/></svg>`;
@@ -195,22 +219,22 @@ function update(){
   if(!D0){document.getElementById('xbody').innerHTML=`<p class="cap">${esc(T.nodata)}</p><div class="chips">`+Object.keys(CX.areas).map(k=>`<button type="button" class="chip" data-k="${k}">${esc(k==='Saudi'?(ar?'السعودية (نطاق)':'Saudi Arabia (box)'):k)}</button>`).join('')+`</div>`;
    document.querySelectorAll('#xbody .chip').forEach(b=>b.onclick=()=>{const a=CX.areas[b.dataset.k];st.c=D.countries.findIndex(c=>c.whole.name.en===a.country);st.r=a.region;update()});drawMap(false);return}
   const sx=D0.stats,sg=sx.p<=0.05,up=sx.sen>0,nmA=nm(o,lang),dec=CC.dec;
-  const hv=ar?(up?'':'-')+Math.abs(sx.sen).toFixed(dec):fmt(sx.sen,dec),hp=sx.p<0.001?'<0.001':sx.p.toFixed(2);
-  const hk=({rain:'h_rain_',et:'h_et_'})[CC.k]||'h_gr_';
+  const hv=ar?(up?'':'\u25BC ')+Math.abs(sx.sen).toFixed(dec):fmt(sx.sen,dec),hp=sx.p<0.001?'<0.001':sx.p.toFixed(2);
+  const hk=({rain:'h_rain_',et:'h_et_',sm:'h_sm_',crop:'h_cr_'})[CC.k]||'h_gr_';
   let head=T[hk+(!sg?'fl':up?'up':'dn')](nmA,hv,hp),extra='';
-  if(CC.k==='et')extra=T.h_et_x;else if(CC.k==='rain')extra=(sg&&!up)?T.h_rain_xd:T.h_rain_x;
+  if(CC.k==='crop'){const vv=D0.v,mm=D0.months,imx=vv.indexOf(Math.max(...vv)),imn=vv.indexOf(Math.min(...vv));extra=T.h_cr_x(vv[0].toFixed(2),mm[0].slice(0,4),vv[vv.length-1].toFixed(2),mm[mm.length-1].slice(0,4),vv[imx].toFixed(2),mm[imx].slice(0,4),vv[imn].toFixed(2),mm[imn].slice(0,4))}else if(CC.k==='sm')extra=T.h_sm_x;else if(CC.k==='et')extra=T.h_et_x;else if(CC.k==='rain')extra=(sg&&!up)?T.h_rain_xd:T.h_rain_x;
   else{const tws=o.stats&&o.stats.tws;extra=(sg&&up&&tws&&tws.sen<0)?T.h_gr_x:T.h_gr_y}
-  const un=({rain:T.rain_u,et:T.et_u})[CC.k]||T.ndvi_u,col=CC.col,isE=CC.k==='et';
+  const un=({rain:T.rain_u,et:T.et_u,sm:T.sm_u,crop:T.crop_u})[CC.k]||T.ndvi_u,col=CC.col,isE=CC.k==='et'||CC.k==='crop';
   const st2=T[(!sg?'flat':up?'up':'down')];
   const ln=LM.name?LM.name[lang]:T['l_'+st.l];
   let h2=`<div class="head"><p class="hl"><b>${f(head)}</b></p><p class="cap" style="margin-top:6px">${f(extra)}</p></div>
   <div id="xchart" class="chart"></div><p class="cap" id="xtip">${esc(T.ctxhint)}</p>
-  <div class="cards"><div class="card" style="--c:${col}"><div class="cn">${esc(T.trend)}</div><div class="cv">${ar?'<span class="num">'+(up?'\u25B2 ':'\u25BC ')+Math.abs(sx.sen).toFixed(dec)+'</span> ':f(fmt(sx.sen,dec)+' ')}${esc(un)}</div><div class="cd">${esc(st2)}<br>${isE?esc(T.pk1)+': <span class="num">'+fp(sx.p)+'</span>':esc(T.pc)+': <span class="num">'+fp(sx.p)+'</span><br>'+esc(T.pk)+': <span class="num">'+fp(sx.pmk)+'</span>'}<br>${esc(T.rec)}: <span class="num">${sx.start}</span> ${ar?'إلى':'to'} <span class="num">${sx.end}</span> (<span class="num">${sx.n}</span> ${esc(isE?T.yrs:T.mo)})</div></div></div>
-  <div class="warn" style="margin-top:12px"><p style="margin:0">${esc(isE?T.ctxnote_et:T.ctxnote)}</p></div>
+  <div class="cards"><div class="card" style="--c:${col}"><div class="cn">${esc(T.trend)}</div><div class="cv">${ar?'<span class="num">'+(up?'\u25B2 ':'\u25BC ')+Math.abs(sx.sen).toFixed(dec)+'</span> ':f(fmt(sx.sen,dec)+' ')}${esc(un)}</div><div class="cd">${esc(st2)}<br>${esc(isE?T.pk1:T.pc)}: <span class="num">${fp(sx.p)}</span>${sx.pmk!=null?'<br>'+esc(T.pk)+': <span class="num">'+fp(sx.pmk)+'</span>':''}<br>${esc(T.rec)}: <span class="num">${sx.start}</span> ${ar?'إلى':'to'} <span class="num">${sx.end}</span> (<span class="num">${sx.n}${sx.total?' / '+sx.total:''}</span> ${esc(isE?T.yrs:CC.k==='sm'?T.smp:T.mo)})</div></div></div>
+  <div class="warn" style="margin-top:12px"><p style="margin:0">${esc(({et:T.ctxnote_et,sm:T.ctxnote_sm,crop:T.ctxnote_crop})[CC.k]||T.ctxnote)}</p></div>
   <p class="cap" style="margin-top:12px">${esc(T.srcl)}: <bdi dir="ltr">${esc(window.CTX.sources[st.l]||'')}</bdi>. <a href="#sats">${esc(T.aboutsat)}</a></p>`;
   if(o.approx)h2+='';
   document.getElementById('xbody').innerHTML=h2;
-  const drawC=()=>{window.__lastDraw=drawC;const box=document.getElementById('xchart');if(!box)return;chart(box,{mo:D0.months,ser:{c:D0.a},sl:{c:sx.sen},cols:{c:col},names:{c:ln},act:['c'],axis:isE?T.etax:T.anomax,tip:document.getElementById('xtip'),dp:isE?1:CC.dec+1})};
+  const drawC=()=>{window.__lastDraw=drawC;const box=document.getElementById('xchart');if(!box)return;chart(box,{mo:D0.months,ser:{c:D0.a},sl:{c:sx.sen},cols:{c:col},names:{c:ln},act:['c'],axis:({et:T.etax,sm:T.smax,crop:T.cropax})[CC.k]||T.anomax,dots:LM.dots,tip:document.getElementById('xtip'),dp:({et:1,crop:3})[CC.k]||CC.dec})};
   drawC();drawMap(false);
   if(MAP){const b=o.bounds||(st.r==='whole'?C.whole.bounds:null);if(b)MAP.fitBounds(b,{padding:[40,40],maxZoom:6})}
   window.initRanking&&window.initRanking(lang);return}
