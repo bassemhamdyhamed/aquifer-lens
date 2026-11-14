@@ -42,6 +42,12 @@ const S={en:{
  rising:(l)=>`${l} تُظهر ارتفاعًا في إجمالي المياه المخزنة، لا انخفاضًا. يعرض الترتيب الاتجاه كما قيس.`,
  risingnote:'إجمالي المياه المخزنة في GRACE يشمل كل المياه المخزنة، وليس المياه الجوفية وحدها.'}};
 Object.assign(S.en,{
+ l_et:'ET (MOD16)',et_u:'mm/yr per year',yrs:'years',pk1:'p (Mann-Kendall, yearly series)',etax:'Annual evapotranspiration (mm per year)',
+ ctxnote_et:'Context layer: it is correlation, not proof of pumping. Evapotranspiration (ET) is the water that returns to the air from soil and plants. This is a yearly series for 2002 to 2025 (not deseasonalized). MOD16 is known to overestimate ET over bare desert, so read the level with care. The sub-boxes are approximate.',
+ h_et_up:(a,v,p)=>`ET in ${a} is rising: ${v} mm/yr each year (p = ${p}).`,
+ h_et_dn:(a,v,p)=>`ET in ${a} is falling: ${v} mm/yr each year (p = ${p}).`,
+ h_et_fl:(a,v,p)=>`ET in ${a} is flat: ${v} mm/yr each year (p = ${p}, no significant trend).`,
+ h_et_x:'ET shows no significant trend in this record. MOD16 overestimates ET over bare desert, so the level is uncertain.',
  lyr:'Layer',l_storage:'Storage (GRACE, GLDAS)',l_imerg:'Rain (IMERG)',l_ndvi:'Greenness (NDVI)',
  subbox:'Saudi area box',nodata:'This layer is not loaded for the selected area. It is available for:',
  pc:'p (corrected, Hamed-Rao)',pk:'p (classic Mann-Kendall)',rec:'Record',mo:'months',trend:'Trend',
@@ -63,6 +69,12 @@ Object.assign(S.en,{
  h_st:(a,d,v,sg)=>`Total water storage in ${a} is ${d} by about ${v} cm per year (${sg}).`,
  ndvi_u:'NDVI per year',rain_u:'mm/month per year'});
 Object.assign(S.ar,{
+ l_et:'التبخر-نتح (\u2066MOD16\u2069)',et_u:'ملم/سنة في السنة',yrs:'سنة',pk1:'قيمة p (مان-كندال، سلسلة سنوية)',etax:'التبخر-نتح السنوي (ملم في السنة)',
+ ctxnote_et:'طبقة سياقية: هي ارتباط وليست دليلًا على الضخ. التبخر-نتح (ET) هو الماء الذي يعود إلى الجو من التربة والنبات. هذه سلسلة سنوية من 2002 إلى 2025 (دون إزالة الموسمية). من المعروف أن \u2066MOD16\u2069 يبالغ في تقدير ET فوق الصحراء العارية، فاقرأ المستوى بحذر. النطاقات الفرعية تقريبية.',
+ h_et_up:(a,v,p)=>`التبخر-نتح في ${a} يرتفع: ${v} ملم/سنة كل سنة (p = ${p}).`,
+ h_et_dn:(a,v,p)=>`التبخر-نتح في ${a} يتراجع: ${v} ملم/سنة كل سنة (p = ${p}).`,
+ h_et_fl:(a,v,p)=>`التبخر-نتح في ${a} مستقر: ${v} ملم/سنة كل سنة (p = ${p}، لا اتجاه دالّ).`,
+ h_et_x:'لا يظهر اتجاه دالّ للتبخر-نتح في هذا السجل. يبالغ \u2066MOD16\u2069 في تقدير ET فوق الصحراء العارية، فالمستوى غير مؤكد.',
  lyr:'الطبقة',l_storage:'التخزين (GRACE وGLDAS)',l_imerg:'الأمطار (IMERG)',l_ndvi:'الاخضرار (NDVI)',
  subbox:'نطاق المنطقة في السعودية',nodata:'هذه الطبقة غير محمّلة للمنطقة المختارة. وهي متاحة لـ:',
  pc:'قيمة p (مصحّحة، هامد-راو)',pk:'قيمة p (مان-كندال التقليدية)',rec:'السجل',mo:'شهرًا',trend:'الاتجاه',
@@ -83,7 +95,7 @@ Object.assign(S.ar,{
  h_gr_y:'الاخضرار سياق فقط ولا يبيّن مصدر المياه.',
  h_st:(a,d,v,sg)=>`إجمالي المياه المخزنة في ${a} ${d} بنحو ${v} سم كل سنة (${sg}).`,
  ndvi_u:'NDVI في السنة',rain_u:'ملم/شهر في السنة'});
-const CL={imerg:{col:'#1b7fb5',dec:3,k:'rain'},ndvi:{col:'#4c9a2a',dec:4,k:'gr'}};
+const CL={et:{col:'#b9770e',dec:2,k:'et'},imerg:{col:'#1b7fb5',dec:3,k:'rain'},ndvi:{col:'#4c9a2a',dec:4,k:'gr'}};
 const COL={tws:'#1f4e79',sm:'#2aa764',gw:'#c0392b'};
 const NUM=/(\d[\d.,]*-\d[\d.,]*|[-+]?\d[\d.,]*(?:e-?\d+)?)/g;
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -184,21 +196,21 @@ function update(){
    document.querySelectorAll('#xbody .chip').forEach(b=>b.onclick=()=>{const a=CX.areas[b.dataset.k];st.c=D.countries.findIndex(c=>c.whole.name.en===a.country);st.r=a.region;update()});drawMap(false);return}
   const sx=D0.stats,sg=sx.p<=0.05,up=sx.sen>0,nmA=nm(o,lang),dec=CC.dec;
   const hv=ar?(up?'':'-')+Math.abs(sx.sen).toFixed(dec):fmt(sx.sen,dec),hp=sx.p<0.001?'<0.001':sx.p.toFixed(2);
-  const hk=CC.k==='rain'?'h_rain_':'h_gr_';
+  const hk=({rain:'h_rain_',et:'h_et_'})[CC.k]||'h_gr_';
   let head=T[hk+(!sg?'fl':up?'up':'dn')](nmA,hv,hp),extra='';
-  if(CC.k==='rain')extra=(sg&&!up)?T.h_rain_xd:T.h_rain_x;
+  if(CC.k==='et')extra=T.h_et_x;else if(CC.k==='rain')extra=(sg&&!up)?T.h_rain_xd:T.h_rain_x;
   else{const tws=o.stats&&o.stats.tws;extra=(sg&&up&&tws&&tws.sen<0)?T.h_gr_x:T.h_gr_y}
-  const un=CC.k==='rain'?T.rain_u:T.ndvi_u,col=CC.col;
+  const un=({rain:T.rain_u,et:T.et_u})[CC.k]||T.ndvi_u,col=CC.col,isE=CC.k==='et';
   const st2=T[(!sg?'flat':up?'up':'down')];
   const ln=LM.name?LM.name[lang]:T['l_'+st.l];
   let h2=`<div class="head"><p class="hl"><b>${f(head)}</b></p><p class="cap" style="margin-top:6px">${f(extra)}</p></div>
   <div id="xchart" class="chart"></div><p class="cap" id="xtip">${esc(T.ctxhint)}</p>
-  <div class="cards"><div class="card" style="--c:${col}"><div class="cn">${esc(T.trend)}</div><div class="cv">${ar?'<span class="num">'+(up?'\u25B2 ':'\u25BC ')+Math.abs(sx.sen).toFixed(dec)+'</span> ':f(fmt(sx.sen,dec)+' ')}${esc(un)}</div><div class="cd">${esc(st2)}<br>${esc(T.pc)}: <span class="num">${fp(sx.p)}</span><br>${esc(T.pk)}: <span class="num">${fp(sx.pmk)}</span><br>${esc(T.rec)}: <span class="num">${sx.start}</span> ${ar?'إلى':'to'} <span class="num">${sx.end}</span> (<span class="num">${sx.n}</span> ${esc(T.mo)})</div></div></div>
-  <div class="warn" style="margin-top:12px"><p style="margin:0">${esc(T.ctxnote)}</p></div>
+  <div class="cards"><div class="card" style="--c:${col}"><div class="cn">${esc(T.trend)}</div><div class="cv">${ar?'<span class="num">'+(up?'\u25B2 ':'\u25BC ')+Math.abs(sx.sen).toFixed(dec)+'</span> ':f(fmt(sx.sen,dec)+' ')}${esc(un)}</div><div class="cd">${esc(st2)}<br>${isE?esc(T.pk1)+': <span class="num">'+fp(sx.p)+'</span>':esc(T.pc)+': <span class="num">'+fp(sx.p)+'</span><br>'+esc(T.pk)+': <span class="num">'+fp(sx.pmk)+'</span>'}<br>${esc(T.rec)}: <span class="num">${sx.start}</span> ${ar?'إلى':'to'} <span class="num">${sx.end}</span> (<span class="num">${sx.n}</span> ${esc(isE?T.yrs:T.mo)})</div></div></div>
+  <div class="warn" style="margin-top:12px"><p style="margin:0">${esc(isE?T.ctxnote_et:T.ctxnote)}</p></div>
   <p class="cap" style="margin-top:12px">${esc(T.srcl)}: <bdi dir="ltr">${esc(window.CTX.sources[st.l]||'')}</bdi>. <a href="#sats">${esc(T.aboutsat)}</a></p>`;
   if(o.approx)h2+='';
   document.getElementById('xbody').innerHTML=h2;
-  const drawC=()=>{window.__lastDraw=drawC;const box=document.getElementById('xchart');if(!box)return;chart(box,{mo:D0.months,ser:{c:D0.a},sl:{c:sx.sen},cols:{c:col},names:{c:ln},act:['c'],axis:T.anomax,tip:document.getElementById('xtip'),dp:CC.dec+1})};
+  const drawC=()=>{window.__lastDraw=drawC;const box=document.getElementById('xchart');if(!box)return;chart(box,{mo:D0.months,ser:{c:D0.a},sl:{c:sx.sen},cols:{c:col},names:{c:ln},act:['c'],axis:isE?T.etax:T.anomax,tip:document.getElementById('xtip'),dp:isE?1:CC.dec+1})};
   drawC();drawMap(false);
   if(MAP){const b=o.bounds||(st.r==='whole'?C.whole.bounds:null);if(b)MAP.fitBounds(b,{padding:[40,40],maxZoom:6})}
   window.initRanking&&window.initRanking(lang);return}
