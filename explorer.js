@@ -13,7 +13,8 @@ const S={en:{
  maptitle:'Map: click an area',maplegend:'Colour = GRACE total water storage trend (cm/yr): red declining, blue rising. Rectangles are analysis boxes, not exact borders.',
  mapfail:'The map could not load. The dropdowns still work.',credit:'Map UX inspired by geemap / leafmap (Qiusheng Wu, MIT). Map data: OpenStreetMap contributors.',
  periodtxt:(a,b,n,g)=>`GRACE trend: ${a} to ${b}. The chart and the GLDAS-based values use the ${g} months both datasets share (April 2002 to July 2026).`,
- method:'Method: the seasonal cycle is removed (calendar-month climatology), then a Mann-Kendall test and Sen slope are applied. The chart plots these deseasonalized anomalies of the regional monthly means. p-values are autocorrelation-corrected (Hamed-Rao). Confidence intervals, where shown, are classic Sen/Kendall intervals and are not autocorrelation-adjusted. Data: JPL GRACE/GRACE-FO Mascon CRI RL06.3 v04 and GLDAS Noah L4 monthly 0.25 deg V2.1 (NASA GES DISC, DOI 10.5067/SXAVCZFAQLNO).',
+ method:'Method: the seasonal cycle is removed (calendar-month climatology), then a Mann-Kendall test and Sen slope are applied. The chart plots these deseasonalized anomalies of the regional monthly means. p-values are autocorrelation-corrected (Hamed-Rao). Confidence intervals, where shown, are classic Sen/Kendall intervals and are not autocorrelation-adjusted.',
+ mdata:'<bdi dir="ltr">JPL GRACE/GRACE-FO Mascon CRI RL06.3 v04</bdi>, <bdi dir="ltr">GLDAS Noah L4 monthly 0.25 deg V2.1</bdi> (NASA GES DISC, DOI <bdi dir="ltr">10.5067/SXAVCZFAQLNO</bdi>)',mlab:'Data: ',
  rtitle:'Country ranking',rlead:'Sen trend of GRACE total water storage, April 2002 to September 2026, most decline first. Click a row to open it above.',
  rk:'#',rc:'Country',rt:'Trend (cm/yr)',rp:'p (corrected)',rn:'Note',
  rising:(l)=>`${l} show rising total water storage, not decline. The ranking reports the trend as measured.`,
@@ -32,7 +33,8 @@ const S={en:{
  maptitle:'الخريطة: اضغط على منطقة',maplegend:'اللون = اتجاه إجمالي المياه المخزنة من GRACE (سم/سنة): أحمر انخفاض، أزرق ارتفاع. المستطيلات هي نطاقات التحليل وليست الحدود الدقيقة.',
  mapfail:'تعذّر تحميل الخريطة. القوائم المنسدلة تعمل.',credit:'واجهة الخريطة مستوحاة من geemap / leafmap (Qiusheng Wu, MIT). بيانات الخريطة: مساهمو OpenStreetMap.',
  periodtxt:(a,b,n,g)=>`اتجاه GRACE: من ${a} إلى ${b}. الرسم والقيم المبنية على GLDAS تستخدم الأشهر المشتركة بين المجموعتين (${g} شهرًا، من أبريل 2002 إلى يوليو 2026).`,
- method:'المنهج: تُزال الدورة الموسمية (متوسط كل شهر تقويمي)، ثم يُطبَّق اختبار مان-كندال وميل سين. يعرض الرسم هذه الانحرافات منزوعة الموسمية من المتوسطات الشهرية للمنطقة. قيم p مصحّحة للارتباط الذاتي (هامد-راو). فواصل الثقة، حيث تظهر، هي فواصل سين/كندال التقليدية وغير معدّلة للارتباط الذاتي. البيانات: JPL GRACE/GRACE-FO Mascon CRI RL06.3 v04 وGLDAS Noah L4 الشهري 0.25 درجة V2.1 (NASA GES DISC، DOI 10.5067/SXAVCZFAQLNO).',
+ method:'المنهج: تُزال الدورة الموسمية (متوسط كل شهر تقويمي)، ثم يُطبَّق اختبار مان-كندال وميل سين. يعرض الرسم هذه الانحرافات منزوعة الموسمية من المتوسطات الشهرية للمنطقة. قيم p مصحّحة للارتباط الذاتي (هامد-راو). فواصل الثقة، حيث تظهر، هي فواصل سين/كندال التقليدية وغير معدّلة للارتباط الذاتي.',
+ mdata:'<bdi dir="ltr">JPL GRACE/GRACE-FO Mascon CRI RL06.3 v04</bdi> و<bdi dir="ltr">GLDAS Noah L4 monthly 0.25 deg V2.1</bdi> <bdi dir="ltr">(NASA GES DISC, DOI 10.5067/SXAVCZFAQLNO)</bdi>',mlab:' البيانات: ',
  rtitle:'ترتيب الدول',rlead:'اتجاه سين لإجمالي المياه المخزنة من GRACE، أبريل 2002 إلى سبتمبر 2026، الأكثر انخفاضًا أولًا. اضغط على صف لفتحه أعلاه.',
  rk:'#',rc:'الدولة',rt:'الاتجاه (سم/سنة)',rp:'p (مصحّحة)',rn:'ملاحظة',
  rising:(l)=>`${l} تُظهر ارتفاعًا في إجمالي المياه المخزنة، لا انخفاضًا. يعرض الترتيب الاتجاه كما قيس.`,
@@ -104,14 +106,14 @@ function update(){
   h+=`<p class="cap">${esc(T.zonenote)}</p><figure><img src="${(window.IM||{})[o.image]||''}" alt="${esc(nm(o,lang))}"></figure>`;
  }
  h+=`<div class="cards">`+keys.map(k=>{const s=o.stats[k];if(!s)return'';const dir=s.sen<0?T.decl:T.incr;
-  let line2='';if(k==='tws'&&s.p!=null&&!s.ci){line2=`<br>${esc(T.pcorr)}: ${f(fp(s.p))}<br>${esc(s.p>0.05?T.nsig:T.sig)}`}
-  else if(s.ci){line2=`<br>95% CI: ${ar?'<span class="num">['+s.ci[0]+' , '+s.ci[1]+']</span>':f(s.ci[0]+' to '+s.ci[1])}<br>${esc(T.pcorr)}: ${f(String(s.p))}<br>${esc(ar?'الفاصل غير معدّل للارتباط الذاتي':'CI not autocorrelation-adjusted')}`}
+  let line2='';if(k==='tws'&&s.p!=null&&!s.ci){line2=`<br>${esc(T.pcorr)}: <span class="num">${fp(s.p)}</span><br>${esc(s.p>0.05?T.nsig:T.sig)}`}
+  else if(s.ci){line2=`<br>95% CI: ${ar?'<span class="num">['+s.ci[0]+' , '+s.ci[1]+']</span>':f(s.ci[0]+' to '+s.ci[1])}<br>${esc(T.pcorr)}: <span class="num">${s.p}</span><br>${esc(ar?'الفاصل غير معدّل للارتباط الذاتي':'CI not autocorrelation-adjusted')}`}
   return `<div class="card" style="--c:${COL[k]}"><div class="cn">${esc(T[k])}</div><div class="cv">${arrow(s.sen,ar,T,2)}</div><div class="cd">${esc(dir)}${line2}</div></div>`}).join('')+`</div>`;
  const gr=D.period_grace.replace(' to ',ar?' إلى ':' to ');
  if(o.series){const a=D.months[0],b=D.months[D.months.length-1];h+=`<p class="cap">${T.periodtxt(f(D.period_grace.split(' ')[0]),f(D.period_grace.split(' ')[2]),f(String(261)),f(String(D.months.length)))}</p>`}
  else h+=`<p class="cap">${esc(T.period)}: ${f(o.period.replace(' to ',ar?' إلى ':' to '))} (${f(String(o.n))} ${esc(T.months)}). ${o.box?f(o.box):''}</p>`;
  if(o.series)h+=`<div class="warn"><p style="margin:0">${esc(T.derived)}</p></div>`;
- h+=`<div class="warn" style="margin-top:10px"><p style="margin:0">${esc(T.res)}</p></div><p class="cap" style="margin-top:12px">${f(T.method)}</p>`;
+ h+=`<div class="warn" style="margin-top:10px"><p style="margin:0">${esc(T.res)}</p></div><p class="cap" style="margin-top:12px">${f(T.method)}${esc(T.mlab)}${T.mdata}.</p>`;
  document.getElementById('xbody').innerHTML=h;
  document.querySelectorAll('#xbody input[data-k]').forEach(i=>i.onchange=()=>{st.on[i.dataset.k]=i.checked;draw()});
  function draw(){
