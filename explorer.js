@@ -45,7 +45,7 @@ window.initExplorer=function(lang){
  <div class="ctl"><label>${esc(T.country)}<select id="xc">${D.countries.map((c,i)=>`<option value="${i}"${i===st.c?' selected':''}>${esc(c.name[lang])}</option>`).join('')}</select></label>
  <label>${esc(T.area)}<select id="xr">${areas.map(a=>`<option value="${a.id}"${a.id===st.r?' selected':''}>${esc(a.name[lang])}</option>`).join('')}</select></label></div>
  <p class="cap">${esc(T.more)}</p>
- <div id="xmapw"><div id="xmap" role="application" aria-label="${esc(T.maptitle)}" style="direction:ltr"></div><div class="legend"><span class="lg" style="background:linear-gradient(90deg,${scol(0)},${scol(-1.4)})"></span><span class="num">0</span><span class="num" style="margin-inline-start:auto">-1.4 ${esc(T.cmyr)}</span></div><p class="cap">${esc(T.maplegend)}</p></div>`;
+ <div id="xmapw"><div id="xmap" role="application" aria-label="${esc(T.maptitle)}" style="direction:ltr"></div><div class="legend"><span class="lg" style="background:linear-gradient(90deg,${scol(0)},${scol(-1.4)})"></span><span class="num">0</span><span class="num" style="margin-inline-start:auto">-1.4 ${esc(T.cmyr)}</span></div><p class="cap">${esc(T.maplegend)}</p><p class="cap">${ar?'واجهة الخريطة مستوحاة من geemap / leafmap (Qiusheng Wu, MIT).':'Map UX inspired by geemap / leafmap (Qiusheng Wu, MIT).'}</p></div>`;
  if(o.series){
   h+=`<div class="chips" role="group" aria-label="${esc(T.metric)}">${keys.map(k=>`<label class="chip" style="--c:${COL[k]}"><input type="checkbox" data-k="${k}"${st.on[k]?' checked':''}><span class="sw" style="background:${COL[k]}"></span>${esc(T[k])}</label>`).join('')}</div>
   <div id="xchart" class="chart"></div><p class="cap" id="xtip">${esc(T.hint)}</p>`;
@@ -54,8 +54,8 @@ window.initExplorer=function(lang){
  }
  h+=`<div class="cards">`+keys.map(k=>{const s=o.stats[k];if(!s)return'';
   const dir=s.sen<0?T.decl:T.incr;
-  return `<div class="card" style="--c:${COL[k]}"><div class="cn">${esc(T[k])}</div><div class="cv">${ar?'<span class="num">'+(s.sen<0?'\u25BC ':'\u25B2 ')+Math.abs(s.sen).toFixed(2)+'</span> '+esc(T.cmyr):f(fmt(s.sen,2)+' '+T.cmyr)}</div><div class="cd">${esc(dir)}${s.ci?' · '+esc(T.ci)+': '+f(s.ci[0]+' '+(ar?'إلى':'to')+' '+s.ci[1]):''}<br>${esc(T.pcorr)}: ${ar&&String(s.p)[0]==='<'?'أقل من '+f(String(s.p).slice(1)):f(s.p)}</div></div>`}).join('')+`</div>
- <p class="cap">${esc(T.period)}: ${f(o.period.replace(' to ',ar?' إلى ':' to '))} (${f(String(o.n))} ${esc(T.months)}). ${o.box?esc(T.box)+': '+f(o.box)+'. ':''}${C.area_note&&st.r==='whole'?esc(C.area_note[lang])+'. ':''}</p>`;
+  return `<div class="card" style="--c:${COL[k]}"><div class="cn">${esc(T[k])}</div><div class="cv">${ar?'<span class="num">'+(s.sen<0?'\u25BC ':'\u25B2 ')+Math.abs(s.sen).toFixed(2)+'</span> '+esc(T.cmyr):f(fmt(s.sen,2)+' '+T.cmyr)}</div><div class="cd">${esc(dir)}${s.ci?' · '+esc(T.ci)+': '+(ar?'<span class="num">['+s.ci[0]+' , '+s.ci[1]+']</span>':f(s.ci[0]+' to '+s.ci[1])):''}<br>${esc(T.pcorr)}: ${ar&&String(s.p)[0]==='<'?'أقل من '+f(String(s.p).slice(1)):f(s.p)}</div></div>`}).join('')+`</div>
+ <p class="cap">${esc(T.period)}: ${f(o.period.replace(' to ',ar?' إلى ':' to '))} (${f(String(o.n))} ${esc(T.months)}). ${o.box?esc(T.box)+': '+(ar?'<span class="num">'+esc(o.box)+'</span>':f(o.box))+'. ':''}${C.area_note&&st.r==='whole'?esc(C.area_note[lang])+'. ':''}</p>`;
  if(o.series)h+=`<div class="warn"><p style="margin:0">${esc(T.derived)}</p></div>`; else h+=`<div class="warn"><p style="margin:0">${esc(T.nogldas)}</p></div>`;
  h+=`<div class="warn" style="margin-top:10px"><p style="margin:0">${esc(T.res)}</p></div>`;
  el.innerHTML=h;
